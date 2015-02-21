@@ -1,6 +1,8 @@
 (ns com.example.helloworld.application
   (:require [com.example.helloworld.resources.helloworld
              :refer [helloworld-resource]]
+            [com.example.helloworld.resources.todo
+             :refer [todo-resource]]
             [com.example.helloworld.health.template-healthcheck
              :refer [template-healthcheck]])
   (:import [com.example.helloworld AbstractHelloWorldApplication]
@@ -16,6 +18,7 @@
                                              (.getDefaultName configuration))
             healthcheck (template-healthcheck (.getTemplate configuration))]
         (.register (.jersey environment) hw-resource)
+        (.register (.jersey environment) (todo-resource))
         (.register (.healthChecks environment) "template" healthcheck)))))
 
 (defn -main [& args]
