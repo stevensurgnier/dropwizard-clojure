@@ -1,8 +1,10 @@
-(ns com.example.helloworld.resources.helloworld-resource
+;; TODO rename sayHello to say-hello
+(ns com.example.helloworld.resources.helloworld
+  ;; (:require [com.example.helloworld.representations.saying
+  ;;            :refer [saying]])
   (:import [com.example.helloworld.representations Saying]
            [com.codahale.metrics.annotation Timed]
            [javax.ws.rs GET Path Produces QueryParam]
-           [javax.ws.rs.core MediaType]
            [java.util.concurrent.atomic AtomicLong]))
 
 (definterface SayHello

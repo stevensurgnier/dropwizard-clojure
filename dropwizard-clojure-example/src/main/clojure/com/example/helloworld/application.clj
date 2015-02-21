@@ -1,5 +1,5 @@
 (ns com.example.helloworld.application
-  (:require [com.example.helloworld.resources.helloworld-resource
+  (:require [com.example.helloworld.resources.helloworld
              :refer [helloworld-resource]]
             [com.example.helloworld.health.template-healthcheck
              :refer [template-healthcheck]])
@@ -12,10 +12,10 @@
   (proxy [AbstractHelloWorldApplication] []
     (initialize [^Bootstrap bootstrap])
     (run [^Configuration configuration ^Environment environment]
-      (let [resource (helloworld-resource (.getTemplate configuration)
-                                          (.getDefaultName configuration))
+      (let [hw-resource (helloworld-resource (.getTemplate configuration)
+                                             (.getDefaultName configuration))
             healthcheck (template-healthcheck (.getTemplate configuration))]
-        (.register (.jersey environment) resource)
+        (.register (.jersey environment) hw-resource)
         (.register (.healthChecks environment) "template" healthcheck)))))
 
 (defn -main [& args]
