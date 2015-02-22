@@ -1,21 +1,19 @@
 (ns com.example.todo.application
-  (:require [com.example.todo.resources.todo
+  (:require [dropwizard-clojure.core :refer [defapplication defmain]]
+            [com.example.todo.resources.todo
              :refer [todo-resource]]
             [com.example.todo.health.todo-size
              :refer [todo-size]])
   (:import [com.example.todo AbstractTodoApplication TodoConfiguration]
-           [io.dropwizard.setup Bootstrap Environment])
+           [io.dropwizard.setup Environment])
   (:gen-class))
 
-(defn application []
-  (proxy [AbstractTodoApplication] []
-    (initialize [^Bootstrap bootstrap])
-    (run [^TodoConfiguration configuration ^Environment environment]
-      (let [resource (todo-resource)
-            healthcheck (todo-size (.getMaxSize configuration) resource)]
-        (.register (.jersey environment) resource)
-        (.register (.healthChecks environment) "todo-size" healthcheck)))))
+(defapplication todo-app
+  AbstractTodoApplication
+  (fn [^TodoConfiguration config ^Environment env]
+    (let [resource (todo-resource)
+          healthcheck (todo-size (.getMaxSize config) resource)]
+      (.register (.jersey env) resource)
+      (.register (.healthChecks env) "todo-size" healthcheck))))
 
-(defn -main [& args]
-  (.run ^AbstractTodoApplication (application)
-        (into-array String args)))
+(defmain todo-app)
