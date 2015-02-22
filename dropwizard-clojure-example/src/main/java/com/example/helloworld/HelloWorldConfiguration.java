@@ -3,6 +3,7 @@ package com.example.helloworld;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class HelloWorldConfiguration extends Configuration {
     @NotEmpty
@@ -10,6 +11,19 @@ public class HelloWorldConfiguration extends Configuration {
 
     @NotEmpty
     private String defaultName = "Stranger";
+
+    @NotNull
+    private int maxSize;
+
+    @JsonProperty
+    public int getMaxSize() {
+        return maxSize;
+    }
+
+    @JsonProperty
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
+    }
 
     @JsonProperty
     public String getTemplate() {
