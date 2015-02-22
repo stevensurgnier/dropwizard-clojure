@@ -1,4 +1,5 @@
 (ns com.example.helloworld.resources.todo
+  (:require [clojure.tools.logging :as log])
   (:import [com.example.helloworld.representations Todo]
            [com.codahale.metrics.annotation Timed]
            [javax.ws.rs GET POST DELETE Path Consumes Produces PathParam]

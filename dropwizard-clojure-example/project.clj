@@ -4,6 +4,7 @@
   :license {:name "Apache License 2.0"
             :url "http://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
+                 [org.clojure/tools.logging "0.3.1"]
                  [io.dropwizard/dropwizard-core "0.7.1"]]
   :source-paths ["src/main/clojure"]
   :java-source-paths ["src/main/java"]
