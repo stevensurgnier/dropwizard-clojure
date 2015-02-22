@@ -8,6 +8,6 @@
                  [io.dropwizard/dropwizard-core "0.7.1"]]
   :source-paths ["src/main/clojure"]
   :java-source-paths ["src/main/java"]
-  :main com.example.helloworld.application
+  :main com.example.todo.application
   :profiles {:uberjar {:aot :all}}
   :global-vars {*warn-on-reflection* true})

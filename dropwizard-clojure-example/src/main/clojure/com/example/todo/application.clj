@@ -1,15 +1,15 @@
-(ns com.example.helloworld.application
-  (:require [com.example.helloworld.resources.todo
+(ns com.example.todo.application
+  (:require [com.example.todo.resources.todo
              :refer [todo-resource]]
-            [com.example.helloworld.health.todo-size
+            [com.example.todo.health.todo-size
              :refer [todo-size]])
-  (:import [com.example.helloworld AbstractHelloWorldApplication]
+  (:import [com.example.todo AbstractTodoApplication]
            [io.dropwizard Configuration]
            [io.dropwizard.setup Bootstrap Environment])
   (:gen-class))
 
 (defn application []
-  (proxy [AbstractHelloWorldApplication] []
+  (proxy [AbstractTodoApplication] []
     (initialize [^Bootstrap bootstrap])
     (run [^Configuration configuration ^Environment environment]
       (let [resource (todo-resource)
@@ -18,5 +18,5 @@
         (.register (.healthChecks environment) "todo-size" healthcheck)))))
 
 (defn -main [& args]
-  (.run ^AbstractHelloWorldApplication (application)
+  (.run ^AbstractTodoApplication (application)
         (into-array String args)))

@@ -1,7 +1,7 @@
-(ns com.example.helloworld.health.todo-size
+(ns com.example.todo.health.todo-size
   (:import [com.codahale.metrics.health HealthCheck]
            [com.codahale.metrics.health HealthCheck$Result]
-           [com.example.helloworld.resources.todo TodoResource]))
+           [com.example.todo.resources.todo TodoResource]))
 
 (defn todo-size [max-size resource]
   (proxy [HealthCheck] []

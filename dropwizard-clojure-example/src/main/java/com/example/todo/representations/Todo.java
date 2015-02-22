@@ -1,4 +1,4 @@
-package com.example.helloworld.representations;
+package com.example.todo.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;

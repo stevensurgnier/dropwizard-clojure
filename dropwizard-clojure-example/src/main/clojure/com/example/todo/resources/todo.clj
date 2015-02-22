@@ -1,13 +1,13 @@
-(ns com.example.helloworld.resources.todo
+(ns com.example.todo.resources.todo
   (:require [clojure.tools.logging :as log])
-  (:import [com.example.helloworld.representations Todo]
+  (:import [com.example.todo.representations Todo]
            [com.codahale.metrics.annotation Timed]
            [javax.ws.rs GET POST DELETE Path Consumes Produces PathParam]))
 
 (definterface ITodo
   (get [])
   (delete [])
-  (add [^Long id ^com.example.helloworld.representations.Todo todo])
+  (add [^Long id ^com.example.todo.representations.Todo todo])
   (get [^Long id])
   (toggle [^Long id])
   (delete [^Long id]))
