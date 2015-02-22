@@ -1,9 +1,7 @@
 (ns com.example.todo.application
   (:require [dropwizard-clojure.core :refer [defapplication defmain]]
-            [com.example.todo.resources.todo
-             :refer [todo-resource]]
-            [com.example.todo.health.todo-size
-             :refer [todo-size]])
+            [com.example.todo.resources.todo :refer [todo-resource]]
+            [com.example.todo.health.todo-size :refer [todo-size]])
   (:import [com.example.todo AbstractTodoApplication TodoConfiguration]
            [io.dropwizard.setup Environment])
   (:gen-class))
