@@ -3,15 +3,14 @@
              :refer [todo-resource]]
             [com.example.todo.health.todo-size
              :refer [todo-size]])
-  (:import [com.example.todo AbstractTodoApplication]
-           [io.dropwizard Configuration]
+  (:import [com.example.todo AbstractTodoApplication TodoConfiguration]
            [io.dropwizard.setup Bootstrap Environment])
   (:gen-class))
 
 (defn application []
   (proxy [AbstractTodoApplication] []
     (initialize [^Bootstrap bootstrap])
-    (run [^Configuration configuration ^Environment environment]
+    (run [^TodoConfiguration configuration ^Environment environment]
       (let [resource (todo-resource)
             healthcheck (todo-size (.getMaxSize configuration) resource)]
         (.register (.jersey environment) resource)
