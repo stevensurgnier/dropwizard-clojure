@@ -1,10 +1,6 @@
 (ns com.example.helloworld.application
-  (:require [com.example.helloworld.resources.helloworld
-             :refer [helloworld-resource]]
-            [com.example.helloworld.resources.todo
+  (:require [com.example.helloworld.resources.todo
              :refer [todo-resource]]
-            [com.example.helloworld.health.template-healthcheck
-             :refer [template-healthcheck]]
             [com.example.helloworld.health.todo-size
              :refer [todo-size]])
   (:import [com.example.helloworld AbstractHelloWorldApplication]
@@ -16,13 +12,8 @@
   (proxy [AbstractHelloWorldApplication] []
     (initialize [^Bootstrap bootstrap])
     (run [^Configuration configuration ^Environment environment]
-      (let [hw-resource (helloworld-resource (.getTemplate configuration)
-                                             (.getDefaultName configuration))
-            hw-healthcheck (template-healthcheck (.getTemplate configuration))
-            resource (todo-resource)
+      (let [resource (todo-resource)
             healthcheck (todo-size (.getMaxSize configuration) resource)]
-        (.register (.jersey environment) hw-resource)
-        (.register (.healthChecks environment) "template" hw-healthcheck)
         (.register (.jersey environment) resource)
         (.register (.healthChecks environment) "todo-size" healthcheck)))))
 
