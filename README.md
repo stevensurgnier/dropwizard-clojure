@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-1. [Leiningen](leiningen)
+1. [Leiningen](#leiningen)
 2. [Creating a Configuration class](#creating-a-configuration-class)
 3. [Creating an Application class](#creating-an-application-class)
 4. [Creating a Representation class](#creating-a-representation-class)
