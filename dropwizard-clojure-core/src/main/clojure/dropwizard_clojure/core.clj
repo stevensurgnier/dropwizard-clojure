@@ -3,11 +3,11 @@
 
 (defn- application
   ([app-name app-class run-fn]
-   (application app-name app-class nil run-fn))
+   (application app-name app-class '(constantly nil) run-fn))
   ([app-name app-class init-fn run-fn]
    `(def ~app-name
       (proxy [~app-class] []
-        (initialize [bootstrap#] ~init-fn)
+        (initialize [bootstrap#] (~init-fn bootstrap#))
         (run [configuration# environment#]
           (~run-fn configuration# environment#))))))
 
