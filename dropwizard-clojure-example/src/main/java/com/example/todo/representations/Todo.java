@@ -2,10 +2,11 @@ package com.example.todo.representations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class Todo {
-    @NotEmpty
-    private boolean complete;
+    @NotNull
+    private Boolean complete;
     @NotEmpty
     private String description;
 
@@ -13,13 +14,13 @@ public class Todo {
         // Jackson deserialization
     }
 
-    public Todo(boolean complete, String description) {
+    public Todo(Boolean complete, String description) {
         this.complete = complete;
         this.description = description;
     }
 
     @JsonProperty
-    public boolean getComplete() {
+    public Boolean getComplete() {
         return complete;
     }
 

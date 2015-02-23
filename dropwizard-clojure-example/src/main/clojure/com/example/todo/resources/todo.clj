@@ -2,6 +2,7 @@
   (:require [clojure.tools.logging :as log])
   (:import [com.example.todo.representations Todo]
            [com.codahale.metrics.annotation Timed]
+           [javax.validation Valid]
            [javax.ws.rs GET POST DELETE Path Consumes Produces PathParam]))
 
 (definterface ITodo
@@ -24,7 +25,7 @@
      {})
     
     (^{Path "{id}" POST true Timed true}
-     add [this ^{PathParam "id"} id todo]
+     add [this ^{PathParam "id"} id ^{Valid true} todo]
      (swap! state assoc id todo))
     
     (^{Path "{id}" GET true Timed true}
