@@ -46,7 +46,17 @@ public class TodoConfiguration extends Configuration {
 }
 ```
 
+Dropwizard will serialize a yml file into your configuration class before starting the application.
+
+[dev-todo.yml](dropwizard-clojure-example/resources/dev-todo.yml)
+
+```yml
+maxSize: 4
+```
+
 ## Creating an Application class
+
+Your dropwizard application requires a concrete implementation of `io.dropwizard.Application` that is parameterized with your configuration class from above. Unfortunately, clojure does not yet support specifying parameterized types. Thus, a tiny abstract application class is recommended to specify the parameterized configuration class.
 
 [AbstractTodoApplication.java](dropwizard-clojure-example/src/main/java/com/example/todo/AbstractTodoApplication.java)
 
@@ -59,6 +69,12 @@ public abstract class AbstractTodoApplication
     extends Application<TodoConfiguration> {
 }
 ```
+
+Now we're ready to write some clojure.
+
+The `defapplication` macro is provided to conveniently create proxy instances of your abstract application class. Two function signatures are available. One that allows you override the `initialize` and `run` methods. The other allows you to override the `run` method only. Below the latter is shown.
+
+The `defmain` macro is provided to conveniently generate a `main` method that will start your application correctly.
 
 [core.clj](dropwizard-clojure-example/src/main/clojure/com/example/todo/core.clj)
 
@@ -190,6 +206,11 @@ public class Todo {
 ```
 
 ## Creating a HealthCheck
+
+The `healthcheck` function is used to create proxy instances of `com.codahale.metrics.health.HealthCheck`. It accepts a function that when applied to zero arguments must return one of the following values:
+
+- a single value ∈ {true, false, nil}
+- a vector of the form [healthy? ∈ {true, false, nil}, message ∈ {string, throwable}]
 
 [todo_size.clj](dropwizard-clojure-example/src/main/clojure/com/example/todo/health/todo_size.clj)
 
