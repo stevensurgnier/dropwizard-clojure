@@ -1,4 +1,4 @@
-(ns com.example.todo.application
+(ns com.example.todo.core
   (:require [dropwizard-clojure.core :refer [defapplication defmain]]
             [com.example.todo.resources.todo :refer [todo-resource]]
             [com.example.todo.health.todo-size :refer [todo-size]])
