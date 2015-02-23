@@ -1,4 +1,4 @@
-(defproject dropwizard-clojure/dropwizard-clojure "0.1.0-SNAPSHOT"
+(defproject dropwizard-clojure/dropwizard-clojure "0.1.0"
   :description "DropWizard for Clojure"
   :url "https://github.com/stevensurgnier/dropwizard-clojure"
   :license {:name "Apache License 2.0"
