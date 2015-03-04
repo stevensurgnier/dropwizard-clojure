@@ -1,7 +1,7 @@
 (ns com.example.todo.core
   (:require [dropwizard-clojure.core
-             :refer [defapplication defmain register-resources
-                     register-healthchecks]]
+             :refer [defapplication defmain register-resource
+                     register-healthcheck]]
             [com.example.todo.resources.todo :refer [todo-resource]]
             [com.example.todo.health.todo-size :refer [todo-size]])
   (:import [com.example.todo AbstractTodoApplication TodoConfiguration]
