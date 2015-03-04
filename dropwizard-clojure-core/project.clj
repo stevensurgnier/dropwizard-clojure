@@ -7,5 +7,6 @@
                  [org.clojure/tools.logging "0.3.1"]
                  [io.dropwizard/dropwizard-core "0.7.1"]]
   :source-paths ["src/main/clojure"]
+  :test-paths ["src/test/clojure"]
   :profiles {:uberjar {:aot :all}}
   :global-vars {*warn-on-reflection* true})
