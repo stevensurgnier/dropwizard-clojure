@@ -205,12 +205,11 @@ public class Todo {
 (defmain todo-app)
 ```
 
+The `register-resources` accepts of a list of resources and returns the environment to allow threading.
+
 ## Creating a HealthCheck
 
-A healthcheck function must return one of the following values:
-
-- a single value ∈ {true, false, nil}
-- a vector of the form [healthy? ∈ {true, false, nil}, message ∈ {string, throwable}]
+Functions may be registered to check the health of your application. The value returned from the function may optionally include a message or Throwable. If the value returned is a sequence, vector, or list, the first element is checked for truthiness to represent the health and the second element is the message or Throwable. Otherwise, the value returned is simply checked for truthiness to represent the health.
 
 [todo_size.clj](dropwizard-clojure-example/src/main/clojure/com/example/todo/health/todo_size.clj)
 
@@ -250,6 +249,8 @@ A healthcheck function must return one of the following values:
 
 (defmain todo-app)
 ```
+
+The `register-healthchecks` accepts of map of healthcheck name to healthcheck function and returns the environment to allow threading.
 
 ## Building fat JARs
 
