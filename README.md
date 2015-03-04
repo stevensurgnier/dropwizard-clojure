@@ -191,7 +191,7 @@ public class Todo {
 
 ```clojure
 (ns com.example.todo.core
-  (:require [dropwizard-clojure.core :refer [defapplication defmain]]
+  (:require [dropwizard-clojure.core :refer [defapplication defmain register-resource]]
             [com.example.todo.resources.todo :refer [todo-resource]]
   (:import [com.example.todo AbstractTodoApplication TodoConfiguration]
            [io.dropwizard.setup Environment])
@@ -200,14 +200,14 @@ public class Todo {
 (defapplication todo-app
   AbstractTodoApplication
   (fn [^TodoConfiguration config ^Environment env]
-    (.register (.jersey env) (todo-resource))))
+    (register-resource (todo-resource))))
 
 (defmain todo-app)
 ```
 
 ## Creating a HealthCheck
 
-The `healthcheck` function is used to create proxy instances of `com.codahale.metrics.health.HealthCheck`. It accepts a function that when applied to zero arguments must return one of the following values:
+A healthcheck function must return one of the following values:
 
 - a single value ∈ {true, false, nil}
 - a vector of the form [healthy? ∈ {true, false, nil}, message ∈ {string, throwable}]
@@ -216,13 +216,12 @@ The `healthcheck` function is used to create proxy instances of `com.codahale.me
 
 ```clojure
 (ns com.example.todo.health.todo-size
-  (:require [dropwizard-clojure.healthcheck :refer [healthcheck]])
   (:import [com.example.todo.resources.todo TodoResource]))
 
 (defn todo-size [max-size ^TodoResource resource]
-  (healthcheck #(if (<= (count (.get resource)) max-size)
-                  true
-                  [false "too many todos"])))
+  (if (<= (count (.get resource)) max-size)
+    true
+    [false "too many todos"]))
 ```
 
 ### Registering a HealthCheck
@@ -231,7 +230,9 @@ The `healthcheck` function is used to create proxy instances of `com.codahale.me
 
 ```clojure
 (ns com.example.todo.core
-  (:require [dropwizard-clojure.core :refer [defapplication defmain]]
+  (:require [dropwizard-clojure.core
+             :refer [defapplication defmain register-resource
+                     register-healthcheck]]
             [com.example.todo.resources.todo :refer [todo-resource]]
             [com.example.todo.health.todo-size :refer [todo-size]])
   (:import [com.example.todo AbstractTodoApplication TodoConfiguration]
@@ -242,9 +243,10 @@ The `healthcheck` function is used to create proxy instances of `com.codahale.me
   AbstractTodoApplication
   (fn [^TodoConfiguration config ^Environment env]
     (let [resource (todo-resource)
-          healthcheck (todo-size (.getMaxSize config) resource)]
-      (.register (.jersey env) resource)
-      (.register (.healthChecks env) "todo-size" healthcheck))))
+          healthcheck #(todo-size (.getMaxSize config) resource)]
+      (-> env
+          (register-resource resource)
+          (register-healthcheck :todo-size healthcheck)))))
 
 (defmain todo-app)
 ```
