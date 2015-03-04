@@ -16,7 +16,7 @@
 ## Leiningen
 
 ```clojure
-[dropwizard-clojure/dropwizard-clojure "0.1.0"]
+[dropwizard-clojure/dropwizard-clojure "0.1.1"]
 ```
 
 ## Creating a Configuration class
@@ -191,7 +191,7 @@ public class Todo {
 
 ```clojure
 (ns com.example.todo.core
-  (:require [dropwizard-clojure.core :refer [defapplication defmain]]
+  (:require [dropwizard-clojure.core :refer [defapplication defmain register-resource]]
             [com.example.todo.resources.todo :refer [todo-resource]]
   (:import [com.example.todo AbstractTodoApplication TodoConfiguration]
            [io.dropwizard.setup Environment])
@@ -200,29 +200,27 @@ public class Todo {
 (defapplication todo-app
   AbstractTodoApplication
   (fn [^TodoConfiguration config ^Environment env]
-    (.register (.jersey env) (todo-resource))))
+    (register-resource (todo-resource))))
 
 (defmain todo-app)
 ```
 
+The `register-resources` accepts of a list of resources and returns the environment to allow threading.
+
 ## Creating a HealthCheck
 
-The `healthcheck` function is used to create proxy instances of `com.codahale.metrics.health.HealthCheck`. It accepts a function that when applied to zero arguments must return one of the following values:
-
-- a single value ∈ {true, false, nil}
-- a vector of the form [healthy? ∈ {true, false, nil}, message ∈ {string, throwable}]
+Functions may be registered to check the health of your application. The value returned from the function may optionally include a message or Throwable. If the value returned is a sequence, vector, or list, the first element is checked for truthiness to represent the health and the second element is the message or Throwable. Otherwise, the value returned is simply checked for truthiness to represent the health.
 
 [todo_size.clj](dropwizard-clojure-example/src/main/clojure/com/example/todo/health/todo_size.clj)
 
 ```clojure
 (ns com.example.todo.health.todo-size
-  (:require [dropwizard-clojure.healthcheck :refer [healthcheck]])
   (:import [com.example.todo.resources.todo TodoResource]))
 
 (defn todo-size [max-size ^TodoResource resource]
-  (healthcheck #(if (<= (count (.get resource)) max-size)
-                  true
-                  [false "too many todos"])))
+  (if (<= (count (.get resource)) max-size)
+    true
+    [false "too many todos"]))
 ```
 
 ### Registering a HealthCheck
@@ -231,7 +229,9 @@ The `healthcheck` function is used to create proxy instances of `com.codahale.me
 
 ```clojure
 (ns com.example.todo.core
-  (:require [dropwizard-clojure.core :refer [defapplication defmain]]
+  (:require [dropwizard-clojure.core
+             :refer [defapplication defmain register-resource
+                     register-healthcheck]]
             [com.example.todo.resources.todo :refer [todo-resource]]
             [com.example.todo.health.todo-size :refer [todo-size]])
   (:import [com.example.todo AbstractTodoApplication TodoConfiguration]
@@ -242,12 +242,15 @@ The `healthcheck` function is used to create proxy instances of `com.codahale.me
   AbstractTodoApplication
   (fn [^TodoConfiguration config ^Environment env]
     (let [resource (todo-resource)
-          healthcheck (todo-size (.getMaxSize config) resource)]
-      (.register (.jersey env) resource)
-      (.register (.healthChecks env) "todo-size" healthcheck))))
+          healthcheck #(todo-size (.getMaxSize config) resource)]
+      (-> env
+          (register-resource resource)
+          (register-healthcheck :todo-size healthcheck)))))
 
 (defmain todo-app)
 ```
+
+The `register-healthchecks` accepts of map of healthcheck name to healthcheck function and returns the environment to allow threading.
 
 ## Building fat JARs
 

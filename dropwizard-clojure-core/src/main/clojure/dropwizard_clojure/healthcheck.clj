@@ -2,24 +2,24 @@
   (:import [com.codahale.metrics.health HealthCheck]
            [com.codahale.metrics.health HealthCheck$Result]))
 
-(defn- to-result [clojure-result]
+(def ^{:private true} default-unhealthy-message
+  "unhealthy")
+
+(defn- marshall-clj-result [x]
   (cond
-    (true? clojure-result)
-    (HealthCheck$Result/healthy)
+    (or (seq? x) (vector? x) (list? x)) (take 2 x)
+    :else (if x [true] [false])))
 
-    (or (nil? clojure-result) (false? clojure-result))
-    (HealthCheck$Result/unhealthy "unhealthy")
+(defn- to-result [[healthy? arg]]
+  (if healthy?
+    (HealthCheck$Result/healthy arg)
+    (HealthCheck$Result/unhealthy (if (nil? arg)
+                                    default-unhealthy-message
+                                    arg))))
 
-    (vector? clojure-result)
-    (let [[healthy? message-or-throwable] clojure-result]
-      (if healthy?
-        (HealthCheck$Result/healthy message-or-throwable)
-        (HealthCheck$Result/unhealthy message-or-throwable)))
-
-    :else
-    (HealthCheck$Result/unhealthy
-     (format "invalid healthcheck return value `%s'" clojure-result))))
+(def ^{:private true} result
+  (comp to-result marshall-clj-result))
 
 (defn healthcheck [healthcheck-fn]
   (proxy [HealthCheck] []
-    (check [] (to-result (healthcheck-fn)))))
+    (check [] (result (healthcheck-fn)))))
