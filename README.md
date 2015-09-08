@@ -16,7 +16,7 @@
 ## Leiningen
 
 ```clojure
-[dropwizard-clojure/dropwizard-clojure "0.1.1"]
+[dropwizard-clojure/dropwizard-clojure "0.2.0"]
 ```
 
 ## Creating a Configuration class
