@@ -2,7 +2,7 @@
   (:import [com.codahale.metrics.health HealthCheck]
            [com.codahale.metrics.health HealthCheck$Result]))
 
-(def ^{:private true} default-unhealthy-message
+(def ^{:private true} ^String default-unhealthy-message
   "unhealthy")
 
 (defn- marshall-clj-result [x]
@@ -10,7 +10,7 @@
     (or (seq? x) (vector? x) (list? x)) (take 2 x)
     :else (if x [true] [false])))
 
-(defn- to-result [[healthy? arg]]
+(defn- to-result [[healthy? ^String arg]]
   (if healthy?
     (HealthCheck$Result/healthy arg)
     (HealthCheck$Result/unhealthy (if (nil? arg)

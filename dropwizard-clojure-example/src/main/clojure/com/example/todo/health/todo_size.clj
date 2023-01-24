@@ -3,5 +3,5 @@
 
 (defn todo-size [max-size ^TodoResource resource]
   (if (<= (count (.get resource)) max-size)
-    true
+    [true (str max-size)]
     [false "too many todos"]))

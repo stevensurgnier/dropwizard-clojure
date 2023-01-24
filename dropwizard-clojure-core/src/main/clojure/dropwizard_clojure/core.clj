@@ -1,19 +1,20 @@
 (ns dropwizard-clojure.core
   (:require [dropwizard-clojure.healthcheck :refer [healthcheck]])
-  (:import [io.dropwizard Application]
+  (:import [dev.justified.dropwizard ClojureDropwizardApplication]
+           [io.dropwizard Application]
            [io.dropwizard.setup Environment]
            [io.dropwizard.jersey.setup JerseyEnvironment]
            [com.codahale.metrics.health HealthCheckRegistry]))
 
 (defn- application
-  ([app-name app-class run-fn]
-   (application app-name app-class '(constantly nil) run-fn))
-  ([app-name app-class init-fn run-fn]
+  ([app-name run-fn]
+   (application app-name '(constantly nil) run-fn))
+  ([app-name init-fn run-fn]
    `(def ~app-name
-      (proxy [~app-class] []
+      (proxy [ClojureDropwizardApplication] []
         (initialize [bootstrap#] (~init-fn bootstrap#))
-        (run [configuration# environment#]
-          (~run-fn configuration# environment#))))))
+        (runWithSettings [settings# environment#]
+          (~run-fn settings# environment#))))))
 
 (defmacro defapplication
   [& args]

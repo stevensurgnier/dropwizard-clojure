@@ -9,7 +9,6 @@
   (:gen-class))
 
 (defapplication todo-app
-  AbstractTodoApplication
   (fn [^TodoConfiguration config ^Environment env]
     (let [resource (todo-resource)
           healthcheck #(todo-size (.getMaxSize config) resource)]

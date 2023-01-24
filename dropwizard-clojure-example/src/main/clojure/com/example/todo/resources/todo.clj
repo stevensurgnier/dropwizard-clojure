@@ -35,7 +35,7 @@
     (^{Path "{id}/toggle" POST true Timed true}
      toggle [this ^{PathParam "id"} id]
      (swap! state update-in [id]
-       #(Todo. (not (.getComplete %)) (.getDescription %))))
+       #(Todo. (not `(.getComplete %)) `(.getDescription %))))
 
     (^{Path "{id}" DELETE true Timed true}
      delete [this ^{PathParam "id"} id]
